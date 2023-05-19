@@ -1,7 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
+import Card from "./Card";
 
 function Weather() {
+  const [search, setSearch] = useState("mumbai");
+  const [tempInfo,setTempInfo]= useState({})
+  const getWeatherInfo = async () => {
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&appid=01ce05b03b77ca5deb535e129c934cedj`;
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log(data);
+      const { temp, humidity, pressure } = data.main;
+      const { main: weathermood } = data.weather[0];
+      const { name } = data;
+      const { speed } = data.wind;
+      const { country, sunset } = data.sys;
+      const myNewWether={
+        temp,
+        humidity,
+        pressure,
+        weathermood,
+        name,
+        speed,
+        country,
+        sunset,
+      };
+      setTempInfo(myNewWether)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getWeatherInfo();
+  }, []);
+
   return (
     <>
       <div className="search mt-4">
@@ -12,93 +45,19 @@ function Weather() {
             placeholder="Recipient's username"
             aria-label="Recipient's username"
             aria-describedby="basic-addon2"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <span
             className="input-group-text m"
             id="basic-addon2"
+            onClick={getWeatherInfo}
           >
             Search
           </span>
         </div>
       </div>
-      <div className="weather">
-        <div className="row">
-          <div className="col cen">
-            <i className="fa-solid fa-cloud"></i>
-          </div>
-          <div className="row m-0">
-            <div className="col-md-8 blk">
-              <div className="row">
-                <div className="col-6 deg ">
-                  <span className="text-white">30.00 &#176;</span>
-                </div>
-                <div className="col-6 details">
-                  <div className="row">
-                    <span className="text-white">Cloud</span>
-                  </div>
-                  <div className="row ">
-                    <span className="text-white">Tokyo,JP</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-4 rck">
-              <div className="row">
-                <span className="text-white">22/12/2003</span>
-              </div>
-              <div className="row">
-                <span className="text-white">12:50:20 PM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row set m-0 ">
-          <div className="col-sm-6">
-            <div className="row">
-              <div className="col-2 mt-3">
-                <i className="fa-solid fa-sun"></i>
-              </div>
-              <div className="col-4">
-                <div className="info mt-2">
-                  <span>15.26</span>
-                  <span>Sunset</span>
-                </div>
-              </div>
-              <div className="col-2 mt-3">
-                <i className="fa-solid fa-wind"></i>
-              </div>
-              <div className="col-4">
-                <div className="info mt-2">
-                  <span>15.26</span>
-                  <span>Sunset</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="row m-0 set">
-              <div className="col-2 mt-3">
-                <i className="fas fa-tint"></i>
-              </div>
-              <div className="col-4">
-                <div className="info mt-2">
-                  <span>15.26</span>
-                  <span>Sunset</span>
-                </div>
-              </div>
-              <div className="col-2 mt-3">
-                <i className="fas fa-cloud-showers-heavy"></i>
-              </div>
-              <div className="col-4">
-                <div className="info mt-2">
-                  <span>15.26</span>
-                  <span>Sunset</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card tempInfo={tempInfo}/>
     </>
   );
 }
