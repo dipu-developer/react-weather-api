@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 
-const Card = ({ tempInfo }) => {
+const Card = ({ tempInfo ,cod}) => {
   const[weatheState, setWeather] = React.useState("");
+
+  
   const {
     temp,
     humidity,
@@ -12,7 +14,6 @@ const Card = ({ tempInfo }) => {
     country,
     sunset,
   } = tempInfo;
-  // setWeather(weathermood)
   useEffect(() => {
     if (weathermood) {
       switch (weathermood) {
@@ -43,10 +44,12 @@ const Card = ({ tempInfo }) => {
   let timeStr = `${date.getHours()}:${date.getMinutes()}`;
   return (
     <>
+    
       <div className="weather">
         <div className="row">
           <div className="col cen">
             <i className={`fa-solid ${weatheState}`}></i>
+            
           </div>
           <div className="row m-0">
             <div className="col-md-8 blk">
